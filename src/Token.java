@@ -44,6 +44,10 @@ public class Token {
     public static final Token multiplyTok = new Token(TokenType.Multiply, "*");
     public static final Token divideTok = new Token(TokenType.Divide, "/");
     public static final Token reminderTok = new Token(TokenType.Reminder, "%");
+    public static final Token colonTok = new Token(TokenType.Colon, ":");
+    public static final Token bigQuotationTok = new Token(TokenType.BigQuotation, "\"");
+    public static final Token smallQuotationTok = new Token(TokenType.SmallQuotation, "'");
+    public static final Token dotTok = new Token(TokenType.Dot, ".");
     public static final Token addAssignTok = new Token(TokenType.AddAssign, "+=");
     public static final Token subAssignTok = new Token(TokenType.SubAssign, "-=");
     public static final Token multAssignTok = new Token(TokenType.MultAssign, "*=");

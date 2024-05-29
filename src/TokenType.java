@@ -4,7 +4,7 @@ public enum TokenType {
     LeftBrace, RightBrace, LeftBracket, RightBracket,
     LeftParen, RightParen, Semicolon, Comma, Assign, AddAssign, SubAssign, MultAssign, DivAssign, RemAssign,
     Equals, Less, LessEqual, Greater, GreaterEqual,
-    Not, NotEqual, Plus, Minus, Multiply, Reminder,
+    Not, NotEqual, Plus, Minus, Multiply, Reminder, Colon, BigQuotation, SmallQuotation, Dot,
     Increment, Decrement,
     Divide, And, Or, Identifier, IntLiteral, CharLiteral, StringLiteral, DoubleLiteral
 }
