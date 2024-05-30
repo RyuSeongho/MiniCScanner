@@ -52,12 +52,41 @@ public class Scanner {
 
     public Token next( ) { // Return next token
         do {
-            if (isLetter(ch) || ch == '_') { // ident or keyword
+            if (isLetter(ch) || ch == '_') { // identifier or keyword
                 String spelling = concat(letters + digits + '_');
                 return Token.keyword(spelling);
-            } else if (isDigit(ch)) { // int literal
-                String number = concat(digits);
-                return Token.mkIntLiteral(number);
+            } else if (isDigit(ch) || ch == '.') { // int literal or double literal
+                String number = concat(digits + '.');
+                if (number.indexOf('.') >= 0)
+                    return Token.mkDoubleLiteral(number);
+                else
+                    return Token.mkIntLiteral(number);
+            } else if (ch == '\'') {
+                ch = nextChar();
+                String charLiteral = "" + ch;
+                if(ch == '\\') {
+                    ch = nextChar();
+                    charLiteral += ch;
+                }
+                check('\'');
+                return Token.mkCharLiteral("'" + charLiteral + "'");
+            } else if (ch == '\"') {
+                ch = nextChar();
+                String stringLiteral = "\"";
+                while (ch != '\"') {
+                    if(ch == '\\') {
+                        stringLiteral += ch;
+                        ch = nextChar();
+                        stringLiteral += ch;
+                        ch = nextChar();
+                        continue;
+                    }
+                    stringLiteral += ch;
+                    ch = nextChar();
+                }
+                stringLiteral += "\"";
+                ch = nextChar();
+                return Token.mkStringLiteral(stringLiteral);
             } else switch (ch) {
                 case ' ': case '\t': case '\r': case eolnCh:
                     ch = nextChar();
@@ -145,11 +174,20 @@ public class Scanner {
                 case ')': ch = nextChar();
                     return Token.rightParenTok;
 
+                case '[': ch = nextChar();
+                    return Token.leftBracketTok;
+
+                case ']': ch = nextChar();
+                    return Token.rightBracketTok;
+
                 case '{': ch = nextChar();
                     return Token.leftBraceTok;
 
                 case '}': ch = nextChar();
                     return Token.rightBraceTok;
+
+                case ':': ch = nextChar();
+                    return Token.colonTok;
 
                 case ';': ch = nextChar();
                     return Token.semicolonTok;
