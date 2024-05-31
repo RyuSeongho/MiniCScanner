@@ -251,9 +251,10 @@ public class Scanner {
     }
 
     public void error (String msg) {
-        System.err.print(line);
-        System.err.println("Error: column " + col + " " + msg);
-        System.exit(1);
+        System.out.print("Error: " + line);
+        System.out.println("Error: column " + col + " " + msg);
+        ch = nextChar();
+        //System.exit(1);
     }
 
     static public void main ( String[] argv ) {
