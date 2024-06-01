@@ -49,18 +49,52 @@ public class Scanner {
         return line.charAt(col);
     }
 
+    private String getExponentialPart() {
+        String exponentialPart = "" + ch;
+        ch = nextChar();
+        if (ch == '+' || ch == '-' || isDigit(ch)){
+            exponentialPart += ch;
+            ch = nextChar();
+            exponentialPart += concat(digits);
+            return exponentialPart;
+        }
+        error("Illegal character, expecting +, -, digits");
+        return ""; //error occurred
+    }
+
+    private String getFractionalPart() {
+        String fractionalPart = "." + concat(digits);
+        if (ch == 'e' || ch == 'E') { // has exponential expression
+            String exponentialPart = getExponentialPart();
+            if(exponentialPart.isEmpty())  // error occurred
+                return "";
+            return fractionalPart + exponentialPart;
+        } else {
+            return fractionalPart;
+        }
+    }
+
 
     public Token next( ) { // Return next token
         do {
             if (isLetter(ch) || ch == '_') { // identifier or keyword
                 String spelling = concat(letters + digits + '_');
                 return Token.keyword(spelling);
-            } else if (isDigit(ch) || ch == '.') { // int literal or double literal
-                String number = concat(digits + '.');
-                if (number.indexOf('.') >= 0)
-                    return Token.mkDoubleLiteral(number);
-                else
-                    return Token.mkIntLiteral(number);
+            } else if (isDigit(ch)) { // int literal or double literal
+                String integerPart = concat(digits);
+                if (ch == '.') { // double literal
+                    ch = nextChar();
+                    String fractionalPart = getFractionalPart();
+                    if(!fractionalPart.isEmpty())  // error not occurred
+                        return Token.mkDoubleLiteral(integerPart + fractionalPart);
+                } else {
+                    return Token.mkIntLiteral(integerPart);
+                }
+            } else if (ch == '.') { // double literal short form
+                ch = nextChar();
+                String fractionalPart = getFractionalPart();
+                if(!fractionalPart.isEmpty())  // error not occurred
+                    return Token.mkDoubleLiteral(fractionalPart);
             } else if (ch == '\'') {
                 ch = nextChar();
                 String charLiteral = "" + ch;
@@ -243,10 +277,10 @@ public class Scanner {
 
     private String concat(String set) {
         String r = "";
-        do {
+        while (set.indexOf(ch) >= 0){
             r += ch;
             ch = nextChar();
-        } while (set.indexOf(ch) >= 0);
+        }
         return r;
     }
 
